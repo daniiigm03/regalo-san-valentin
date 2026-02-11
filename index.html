@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo de Acceso</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+        body { font-family: 'Fira+Code', monospace; background-color: #0a0a0a; color: #00ff41; }
+        .glitch { text-shadow: 2px 2px #ff0055; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div id="game-container" class="w-full max-w-sm border-2 border-green-500 p-6 rounded-lg bg-black shadow-[0_0_15px_rgba(0,255,65,0.5)]">
+        <div id="setup">
+            <h1 class="text-xl font-bold mb-4 glitch uppercase text-center">Iniciando Protocolo_Amor.exe</h1>
+            <p class="mb-6 text-sm">Se requiere autenticación de pareja para continuar...</p>
+            <button onclick="startTest()" class="w-full bg-green-500 text-black font-bold py-2 rounded hover:bg-green-400 transition">EMPEZAR TEST</button>
+        </div>
+
+        <div id="quiz" class="hidden">
+            <p id="question" class="mb-4 text-lg italic"></p>
+            <div id="options" class="space-y-3"></div>
+        </div>
+
+        <div id="result" class="hidden text-center">
+            <h2 class="text-2xl font-bold text-pink-500 mb-4 uppercase">¡Acceso Concedido!</h2>
+            <p class="text-white mb-4">Status: <span class="text-green-400">Enamorado infinitamente</span></p>
+            <p class="text-sm text-gray-400 italic">"Eres mi commit favorito en el repositorio de mi vida."</p>
+            <div class="mt-6 text-4xl animate-bounce">❤️</div>
+            <p class="mt-4 text-xs font-bold border-t border-gray-700 pt-4">TE AMO</p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "¿En qué mes nos conocimos?", a: ["Enero", "Febrero", "Marzo"], correct: 0 },
+            { q: "¿Cuál es mi comida favorita que tú cocinas?", a: ["Pasta", "Pizza", "Tu sonrisa (cursi)", "Tortilla"], correct: 2 },
+            { q: "¿Cuánto espacio ocupas en mi sistema?", a: ["128GB", "Todo el disco duro", "Es un overflow de amor"], correct: 2 }
+        ];
+
+        let currentQ = 0;
+
+        function startTest() {
+            document.getElementById('setup').classList.add('hidden');
+            document.getElementById('quiz').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQ];
+            document.getElementById('question').innerText = `> ${q.q}`;
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            q.a.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.innerText = opt;
+                btn.className = "w-full border border-green-500 py-2 rounded hover:bg-green-900 transition text-left px-4";
+                btn.onclick = () => checkAnswer(i);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(i) {
+            if(i === questions[currentQ].correct) {
+                currentQ++;
+                if(currentQ < questions.length) { showQuestion(); }
+                else { showResult(); }
+            } else {
+                alert("ERROR: Respuesta incorrecta. Inténtalo de nuevo, ¡tú me conoces!");
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz').classList.add('hidden');
+            document.getElementById('result').classList.remove('hidden');
+            window.navigator.vibrate([200, 100, 200]); // Efecto de vibración
+        }
+    </script>
+</body>
+</html>
