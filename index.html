@@ -3,42 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protocolo de Acceso</title>
+    <title>Protocolo de Acceso: San Valentín</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
-        body { font-family: 'Fira+Code', monospace; background-color: #0a0a0a; color: #00ff41; }
-        .glitch { text-shadow: 2px 2px #ff0055; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: radial-gradient(circle, #2a0a0a 0%, #050505 100%);
+            color: #fce4e4;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+        .btn-red {
+            background: linear-gradient(45deg, #8b0000, #ff4d4d);
+            transition: all 0.3s ease;
+        }
+        .btn-red:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
+        .modal-enter { animation: zoomIn 0.3s ease-out; }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4">
+<body class="flex flex-col items-center justify-center min-h-screen p-6 relative">
 
-    <div id="game-container" class="w-full max-w-sm border-2 border-green-500 p-6 rounded-lg bg-black shadow-[0_0_15px_rgba(0,255,65,0.5)]">
-        <div id="setup">
-            <h1 class="text-xl font-bold mb-4 glitch uppercase text-center">Iniciando Protocolo_Amor.exe</h1>
-            <p class="mb-6 text-sm">Se requiere autenticación de pareja para continuar...</p>
-            <button onclick="startTest()" class="w-full bg-green-500 text-black font-bold py-2 rounded hover:bg-green-400 transition">EMPEZAR TEST</button>
+    <div id="sarcastic-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60">
+        <div class="glass p-8 rounded-3xl max-w-sm text-center modal-enter border-blue-500/30">
+            <div class="text-5xl mb-4">😏</div>
+            <p class="text-white text-lg font-semibold italic">Te lo estoy poniendo difícil, ¿eh...?</p>
+        </div>
+    </div>
+
+    <div id="challenge-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80">
+        <div class="glass p-8 rounded-3xl max-w-sm text-center modal-enter shadow-[0_0_50px_rgba(255,0,0,0.3)]">
+            <div class="text-4xl mb-4">🤨</div>
+            <h3 class="text-xl font-bold text-white mb-4 uppercase">¡Vaya, vaya!</h3>
+            <p class="text-gray-300 mb-6 text-sm">No esperaba que fueras a acertar tantas preguntas... Se nota que me tienes bien estudiado.</p>
+            <div class="space-y-3">
+                <button onclick="continueTest()" class="w-full btn-red py-3 rounded-xl font-bold text-sm">QUIERO CONTINUAR</button>
+                <button onclick="giveUp()" class="w-full border border-gray-600 text-gray-400 py-3 rounded-xl text-xs hover:text-white transition">ME RINDO (PERDER REGALO)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sorry-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60">
+        <div class="glass p-8 rounded-3xl max-w-sm text-center modal-enter border-pink-500/30">
+            <div class="text-5xl mb-4">🥺</div>
+            <p class="text-white text-lg font-semibold">Sabes que lo hago con amor...</p>
+        </div>
+    </div>
+
+    <div id="troll-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-6 bg-red-950/90">
+        <div class="glass p-8 rounded-3xl max-w-sm text-center modal-enter border-red-500">
+            <div id="troll-icon" class="text-6xl mb-4">🤡</div>
+            <h3 id="troll-title" class="text-xl font-bold text-red-500 mb-4 uppercase">¿SÍ?</h3>
+            <p id="troll-text" class="text-white mb-6 text-sm">Pues te vas a quedar con las ganas por pringada. <br><br><strong>Reiniciando juego... No toques la pantalla.</strong></p>
+            <div class="flex justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div></div>
+        </div>
+    </div>
+
+    <div id="game-container" class="w-full max-w-md glass p-8 rounded-3xl shadow-2xl">
+        <div id="setup" class="text-center">
+            <div class="mb-6 text-red-500 text-6xl text-center">❤️</div>
+            <h1 class="text-xl font-bold mb-2 uppercase tracking-widest text-white">Persona especial detectada</h1>
+            <p class="mb-8 text-gray-400 text-sm italic">Verifique su identidad respondiendo al test.</p>
+            <button onclick="startTest()" class="w-full btn-red text-white font-bold py-4 rounded-xl shadow-lg">INICIAR VALIDACIÓN</button>
         </div>
 
         <div id="quiz" class="hidden">
-            <p id="question" class="mb-4 text-lg italic"></p>
-            <div id="options" class="space-y-3"></div>
+            <div class="flex justify-between items-center mb-6">
+                <span id="progress" class="text-[10px] text-red-400 font-bold uppercase tracking-widest">Pregunta 1 de 10</span>
+                <div class="h-1 w-24 bg-gray-800 rounded-full overflow-hidden"><div id="bar" class="h-1 bg-red-500 rounded-full transition-all duration-500" style="width: 10%"></div></div>
+            </div>
+            <p id="question" class="mb-8 text-xl font-semibold leading-tight text-white"></p>
+            <div id="options" class="space-y-4"></div>
         </div>
 
-        <div id="result" class="hidden text-center">
-            <h2 class="text-2xl font-bold text-pink-500 mb-4 uppercase">¡Acceso Concedido!</h2>
-            <p class="text-white mb-4">Status: <span class="text-green-400">Enamorado infinitamente</span></p>
-            <p class="text-sm text-gray-400 italic">"Eres mi commit favorito en el repositorio de mi vida."</p>
-            <div class="mt-6 text-4xl animate-bounce">❤️</div>
-            <p class="mt-4 text-xs font-bold border-t border-gray-700 pt-4">TE AMO</p>
+       <div id="result" class="hidden text-center animate-fade-in">
+            <h2 class="text-3xl font-bold text-red-500 mb-2 uppercase tracking-tighter">¡Juego Completado!</h2>
+            <p class="text-xl font-semibold text-white mb-6">Puntuación: <span class="text-green-500">10/10</span></p>
+            
+            <div class="p-6 border-l-4 border-red-500 bg-red-900/20 text-left mb-8 rounded-r-xl">
+                <p class="text-white italic leading-relaxed text-sm">
+                    "Has desbloqueado mi amor para siempre. Eres la persona con la que quiero compartir todos mis días. <br><br>
+                    <strong>¡Ya puedes abrir tu recompensa!</strong>"
+                </p>
+            </div>
+            
+            <div class="mt-8 text-6xl animate-bounce">🎁</div>
+            <p class="mt-10 text-[10px] text-gray-500 uppercase tracking-[0.3em] font-bold">Protocolo Finalizado // San Valentín 2026</p>
         </div>
     </div>
 
     <script>
         const questions = [
-            { q: "¿En qué mes nos conocimos?", a: ["Enero", "Febrero", "Marzo"], correct: 0 },
-            { q: "¿Cuál es mi comida favorita que tú cocinas?", a: ["Pasta", "Pizza", "Tu sonrisa (cursi)", "Tortilla"], correct: 2 },
-            { q: "¿Cuánto espacio ocupas en mi sistema?", a: ["128GB", "Todo el disco duro", "Es un overflow de amor"], correct: 2 }
+            { q: "¿Dónde fue nuestra primera cita?", a: ["Champions Burguer", "Matilde", "En tu casa"], correct: 1 },
+            { q: "¿Cuál es mi color favorito?", a: ["Rojo", "Azul", "Verde"], correct: 0 },
+            { q: "¿Qué día es mi cumpleaños?", a: ["12 de Julio", "16 de Agosto", "15 de Junio"], correct: 2 },
+            { q: "¿Cuál fue la primera película que vimos en el cine?", a: ["El Joker", "Jurassic World", "Weapons"], correct: 0 },
+            { q: "¿Qué es lo que más te gusta de mí?", a: ["Mi cara tan mona", "Cómo te hago reír", "Todo (Soy Perfecto)"], correct: 2 },
+            { q: "¿Qué manías tengo?", a: ["Ordenar todo", "Darte muchos besos", "Tirarme pedetes"], correct: 2 },
+            { q: "¿Primer beso?", a: ["2023", "2024", "Nunca"], correct: 0 },
+            { q: "¿Cuál es mi perro favorito?", a: ["Golden retriever", "Border Collie", "Chihuahua"], correct: 1 },
+            { q: "¿Del 1 al 10 cuantas ganas tienes de abrir este regalo?", a: ["Muchaaaasss", "10", "Dejame yaaaa"], correct: 1 },
+            { q: "¿Cuánto te quiero?", a: ["Muy poco", "Muchisisisimo", "Imposible de calcular"], correct: 2 }
         ];
 
         let currentQ = 0;
@@ -51,13 +120,15 @@
 
         function showQuestion() {
             const q = questions[currentQ];
-            document.getElementById('question').innerText = `> ${q.q}`;
+            document.getElementById('progress').innerText = `Pregunta ${currentQ + 1} de ${questions.length}`;
+            document.getElementById('bar').style.width = `${((currentQ + 1) / questions.length) * 100}%`;
+            document.getElementById('question').innerText = q.q;
             const optionsDiv = document.getElementById('options');
             optionsDiv.innerHTML = '';
             q.a.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.innerText = opt;
-                btn.className = "w-full border border-green-500 py-2 rounded hover:bg-green-900 transition text-left px-4";
+                btn.className = "w-full glass py-3 px-4 rounded-xl hover:bg-red-900/30 transition text-left text-sm border border-white/10 text-gray-200 focus:outline-none";
                 btn.onclick = () => checkAnswer(i);
                 optionsDiv.appendChild(btn);
             });
@@ -65,18 +136,69 @@
 
         function checkAnswer(i) {
             if(i === questions[currentQ].correct) {
-                currentQ++;
-                if(currentQ < questions.length) { showQuestion(); }
-                else { showResult(); }
+                if(currentQ === 2) { // Después de P3
+                    showSarcasticModal();
+                } else if(currentQ === 4) { // P5
+                    document.getElementById('challenge-modal').classList.remove('hidden');
+                } else if(currentQ === 5) { // P6
+                    showSorryModal();
+                } else if(currentQ === 8) { // P9
+                    showTrollModal();
+                } else {
+                    nextStep();
+                }
             } else {
-                alert("ERROR: Respuesta incorrecta. Inténtalo de nuevo, ¡tú me conoces!");
+                alert("ACCESO DENEGADO: Inténtalo de nuevo.");
             }
+        }
+
+        function showSarcasticModal() {
+            const modal = document.getElementById('sarcastic-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.add('hidden'); nextStep(); }, 3000);
+        }
+
+        function showSorryModal() {
+            const modal = document.getElementById('sorry-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.add('hidden'); nextStep(); }, 3000);
+        }
+
+        function showTrollModal() {
+            const modal = document.getElementById('troll-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('troll-icon').innerText = "😝";
+                document.getElementById('troll-title').innerText = "¡ERA BROMAAAA!";
+                document.getElementById('troll-title').classList.replace('text-red-500', 'text-green-400');
+                document.getElementById('troll-text').innerHTML = "Venga, que ya llegas al final... <br>Te dejo hacer la última.";
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    nextStep();
+                }, 3000);
+            }, 5000);
+        }
+
+        function nextStep() {
+            currentQ++;
+            if(currentQ < questions.length) { showQuestion(); }
+            else { showResult(); }
+        }
+
+        function continueTest() {
+            document.getElementById('challenge-modal').classList.add('hidden');
+            nextStep();
+        }
+
+        function giveUp() {
+            alert("¡No te rindas ahora! 😜");
+            location.reload();
         }
 
         function showResult() {
             document.getElementById('quiz').classList.add('hidden');
             document.getElementById('result').classList.remove('hidden');
-            window.navigator.vibrate([200, 100, 200]); // Efecto de vibración
+            if (window.navigator.vibrate) window.navigator.vibrate([100, 30, 100, 30, 300]);
         }
     </script>
 </body>
