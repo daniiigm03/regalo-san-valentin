@@ -15,13 +15,15 @@
             margin: 0;
             padding: 0;
             background-color: #050505;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background: radial-gradient(circle, #2a0a0a 0%, #050505 100%);
             color: #fce4e4;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -106,33 +108,46 @@
 
         /* Jaula UI */
         .cage-container {
-            z-index: 50;
-            background: rgba(0, 0, 0, 0.4);
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 15px;
             padding: 10px;
-            border: 1px solid rgba(255, 0, 0, 0.2);
+            border: 2px solid rgba(255, 0, 0, 0.3);
             transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             width: 100px;
             height: 100px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
         }
 
         /* Estados de la jaula */
         .cage-center {
             position: relative;
-            margin: 0 auto 2rem;
+            margin: 0 auto 1.5rem;
             width: 140px;
             height: 140px;
         }
 
         .cage-corner {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            left: auto !important;
-            bottom: auto !important;
-            transform: none !important;
+            position: absolute;
+            top: -50px;
+            right: 0;
             width: 80px;
             height: 80px;
+            transform: scale(0.9);
+        }
+
+        @media (max-width: 640px) {
+            .cage-corner {
+                top: -40px;
+                right: 10px;
+                width: 70px;
+                height: 70px;
+            }
+
+            .cage-center {
+                width: 120px;
+                height: 120px;
+            }
         }
 
         .boyfriend-avatar {
@@ -243,22 +258,24 @@
         </div>
     </div>
 
-    <div id="cage" class="cage-container cage-center hidden">
-        <div class="boyfriend-avatar">👨🏻‍💻</div>
-        <div class="cage-bars">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-    </div>
-
     <div id="game-container"
-        class="w-full max-w-md glass p-10 rounded-3xl shadow-2xl hidden flex flex-col items-center">
+        class="w-full max-w-md glass p-6 md:p-10 rounded-3xl shadow-2xl hidden flex flex-col items-center relative">
+        <!-- El contenedor de la jaula ahora está dentro del game-container relative -->
+        <div id="cage-wrapper" class="w-full relative flex justify-center">
+            <div id="cage" class="cage-container cage-center hidden">
+                <div class="boyfriend-avatar">👨🏻‍💻</div>
+                <div class="cage-bars">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </div>
+
         <div id="setup" class="text-center w-full">
-            <div id="cage-placeholder-setup"></div> <!-- Aquí se moverá la jaula -->
-            <h1 class="text-xl font-bold mb-2 uppercase tracking-widest text-white">¡Misión de Rescate!</h1>
+            <h1 class="text-xl font-bold mb-2 uppercase tracking-widest text-white mt-4">¡Misión de Rescate!</h1>
             <p class="mb-8 text-gray-400 text-sm italic">Tu novio ha sido encarcelado.<br>¿Aceptas el reto de liberarlo?
             </p>
             <button onclick="startChallenge()"
@@ -280,7 +297,6 @@
         </div>
 
         <div id="result" class="hidden text-center animate-fade-in relative w-full flex flex-col items-center">
-            <div id="cage-placeholder-result"></div> <!-- Aquí bajará la jaula al final -->
             <h2 class="text-2xl font-bold text-red-500 mb-4 uppercase tracking-tighter">¡SISTEMA DESBLOQUEADO!</h2>
 
             <div class="p-6 border-l-4 border-red-500 bg-red-900/20 text-left mb-8 rounded-r-xl w-full">
@@ -355,7 +371,6 @@
                 document.getElementById('game-container').classList.remove('hidden');
                 const cage = document.getElementById('cage');
                 cage.classList.remove('hidden');
-                document.getElementById('cage-placeholder-setup').appendChild(cage);
                 createHearts();
             }, 1000);
         }
@@ -393,11 +408,8 @@
         function startChallenge() {
             const cage = document.getElementById('cage');
 
-            // Simular transición visual
+            // Simular transición visual dentro del contenedor
             cage.classList.replace('cage-center', 'cage-corner');
-
-            // No mover de padre en el DOM si no es estrictamente necesario 
-            // para evitar glitches en navegadores móviles
 
             setTimeout(() => {
                 document.getElementById('setup').classList.add('hidden');
@@ -507,3 +519,6 @@
 </body>
 
 </html>
+
+</html>
+
