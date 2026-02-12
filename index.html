@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,50 +8,197 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
-        body { 
-            font-family: 'Poppins', sans-serif; 
+
+        body {
+            font-family: 'Poppins', sans-serif;
             background: radial-gradient(circle, #2a0a0a 0%, #050505 100%);
             color: #fce4e4;
+            overflow: hidden;
         }
+
         .glass {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 0, 0, 0.2);
         }
+
         .btn-red {
             background: linear-gradient(45deg, #8b0000, #ff4d4d);
             transition: all 0.3s ease;
         }
-        .btn-red:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
-        .modal-enter { animation: zoomIn 0.3s ease-out; }
-        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        .btn-red:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+        }
+
+        .modal-enter {
+            animation: zoomIn 0.3s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Modales más sutiles */
+        .glass-subtle {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 0, 0, 0.1);
+            padding: 1rem !important;
+            max-width: 280px !important;
+        }
+
+        .modal-subtle-text {
+            font-size: 0.9rem !important;
+        }
+
+        /* Corazones Flotantes */
+        .heart {
+            position: absolute;
+            color: rgba(255, 0, 0, 0.3);
+            font-size: 20px;
+            pointer-events: none;
+            z-index: -1;
+            animation: float 10s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Jaula UI */
+        .cage-container {
+            z-index: 50;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 100px;
+            height: 100px;
+        }
+
+        /* Estados de la jaula */
+        .cage-center {
+            position: relative;
+            margin: 0 auto 2rem;
+            width: 140px;
+            height: 140px;
+        }
+
+        .cage-corner {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            transform: translate(0, 0);
+        }
+
+        .boyfriend-avatar {
+            font-size: 50px;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.5s ease;
+        }
+
+        .cage-center .boyfriend-avatar {
+            font-size: 70px;
+        }
+
+        .cage-bars {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 10px;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .bar {
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, #444, #888, #444);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bar.removed {
+            opacity: 0;
+            transform: translateY(-50px) rotate(15deg);
+        }
+
+        /* Cinematic text */
+        #cinematic-text {
+            min-height: 80px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: #ff4d4d;
+            vertical-align: middle;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
     </style>
 </head>
+
 <body class="flex flex-col items-center justify-center min-h-screen p-6 relative">
 
-    <div id="sarcastic-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60">
-        <div class="glass p-8 rounded-3xl max-w-sm text-center modal-enter border-blue-500/30">
-            <div class="text-5xl mb-4">😏</div>
-            <p class="text-white text-lg font-semibold italic">Te lo estoy poniendo difícil, ¿eh...?</p>
+    <div id="sarcastic-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40">
+        <div class="glass-subtle rounded-2xl text-center modal-enter">
+            <div class="text-3xl mb-2">😏</div>
+            <p class="text-white modal-subtle-text italic">Te lo estoy poniendo difícil...</p>
         </div>
     </div>
 
-    <div id="challenge-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80">
-        <div class="glass p-8 rounded-3xl max-w-sm text-center modal-enter shadow-[0_0_50px_rgba(255,0,0,0.3)]">
-            <div class="text-4xl mb-4">🤨</div>
-            <h3 class="text-xl font-bold text-white mb-4 uppercase">¡Vaya, vaya!</h3>
-            <p class="text-gray-300 mb-6 text-sm">No esperaba que fueras a acertar tantas preguntas... Se nota que me tienes bien estudiado.</p>
-            <div class="space-y-3">
-                <button onclick="continueTest()" class="w-full btn-red py-3 rounded-xl font-bold text-sm">QUIERO CONTINUAR</button>
-                <button onclick="giveUp()" class="w-full border border-gray-600 text-gray-400 py-3 rounded-xl text-xs hover:text-white transition">ME RINDO (PERDER REGALO)</button>
-            </div>
+    <div id="challenge-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50">
+        <div class="glass-subtle rounded-2xl text-center modal-enter">
+            <div class="text-3xl mb-2">🤨</div>
+            <p class="text-white modal-subtle-text mb-4">¡Vaya, vaya! Me tienes bien estudiado.</p>
+            <button onclick="continueTest()" class="w-full btn-red py-2 rounded-lg font-bold text-xs">CONTINUAR</button>
         </div>
     </div>
 
-    <div id="sorry-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60">
-        <div class="glass p-8 rounded-3xl max-w-sm text-center modal-enter border-pink-500/30">
-            <div class="text-5xl mb-4">🥺</div>
-            <p class="text-white text-lg font-semibold">Sabes que lo hago con amor...</p>
+    <div id="sorry-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40">
+        <div class="glass-subtle rounded-2xl text-center modal-enter">
+            <div class="text-3xl mb-2">🥺</div>
+            <p class="text-white modal-subtle-text">Sabes que lo hago con amor...</p>
         </div>
     </div>
 
@@ -58,41 +206,78 @@
         <div class="glass p-8 rounded-3xl max-w-sm text-center modal-enter border-red-500">
             <div id="troll-icon" class="text-6xl mb-4">🤡</div>
             <h3 id="troll-title" class="text-xl font-bold text-red-500 mb-4 uppercase">¿SÍ?</h3>
-            <p id="troll-text" class="text-white mb-6 text-sm">Pues te vas a quedar con las ganas por pringada. <br><br><strong>Reiniciando juego... No toques la pantalla.</strong></p>
-            <div class="flex justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div></div>
+            <p id="troll-text" class="text-white mb-6 text-sm">Pues te vas a quedar con las ganas por pringada.
+                <br><br><strong>Reiniciando juego... No toques la pantalla.</strong>
+            </p>
+            <div class="flex justify-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+            </div>
         </div>
     </div>
 
-    <div id="game-container" class="w-full max-w-md glass p-8 rounded-3xl shadow-2xl">
-        <div id="setup" class="text-center">
-            <div class="mb-6 text-red-500 text-6xl text-center">❤️</div>
-            <h1 class="text-xl font-bold mb-2 uppercase tracking-widest text-white">Persona especial detectada</h1>
-            <p class="mb-8 text-gray-400 text-sm italic">Verifique su identidad respondiendo al test.</p>
-            <button onclick="startTest()" class="w-full btn-red text-white font-bold py-4 rounded-xl shadow-lg">INICIAR VALIDACIÓN</button>
+    <div id="hearts-container"></div>
+
+    <div id="cinematic" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-8">
+        <div class="max-w-lg w-full text-center">
+            <div id="cinematic-text" class="text-xl md:text-2xl font-mono text-red-500 mb-8 leading-relaxed"></div>
+            <button id="skip-btn" onclick="skipCinematic()"
+                class="opacity-0 transition-opacity duration-1000 border border-red-500 text-red-500 px-6 py-2 rounded-full text-xs uppercase tracking-widest hover:bg-red-500 hover:text-black">Omitir
+                intro</button>
         </div>
+    </div>
+
+    <div id="cage" class="cage-container cage-center hidden">
+        <div class="boyfriend-avatar">👨🏻‍💻</div>
+        <div class="cage-bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+
+    <div id="game-container"
+        class="w-full max-w-md glass p-10 rounded-3xl shadow-2xl hidden flex flex-col items-center">
+        <div id="setup" class="text-center w-full">
+            <div id="cage-placeholder-setup"></div> <!-- Aquí se moverá la jaula -->
+            <h1 class="text-xl font-bold mb-2 uppercase tracking-widest text-white">¡Misión de Rescate!</h1>
+            <p class="mb-8 text-gray-400 text-sm italic">Tu novio ha sido encarcelado.<br>¿Aceptas el reto de liberarlo?
+            </p>
+            <button onclick="startChallenge()"
+                class="w-full btn-red text-white font-bold py-4 rounded-xl shadow-lg">ACEPTAR RETO</button>
+        </div>
+
 
         <div id="quiz" class="hidden">
             <div class="flex justify-between items-center mb-6">
-                <span id="progress" class="text-[10px] text-red-400 font-bold uppercase tracking-widest">Pregunta 1 de 10</span>
-                <div class="h-1 w-24 bg-gray-800 rounded-full overflow-hidden"><div id="bar" class="h-1 bg-red-500 rounded-full transition-all duration-500" style="width: 10%"></div></div>
+                <span id="progress" class="text-[10px] text-red-400 font-bold uppercase tracking-widest">Pregunta 1 de
+                    10</span>
+                <div class="h-1 w-24 bg-gray-800 rounded-full overflow-hidden">
+                    <div id="bar" class="h-1 bg-red-500 rounded-full transition-all duration-500" style="width: 10%">
+                    </div>
+                </div>
             </div>
             <p id="question" class="mb-8 text-xl font-semibold leading-tight text-white"></p>
             <div id="options" class="space-y-4"></div>
         </div>
 
-       <div id="result" class="hidden text-center animate-fade-in">
-            <h2 class="text-3xl font-bold text-red-500 mb-2 uppercase tracking-tighter">¡Juego Completado!</h2>
-            <p class="text-xl font-semibold text-white mb-6">Puntuación: <span class="text-green-500">10/10</span></p>
-            
-            <div class="p-6 border-l-4 border-red-500 bg-red-900/20 text-left mb-8 rounded-r-xl">
+        <div id="result" class="hidden text-center animate-fade-in relative w-full flex flex-col items-center">
+            <div id="cage-placeholder-result"></div> <!-- Aquí bajará la jaula al final -->
+            <h2 class="text-2xl font-bold text-red-500 mb-4 uppercase tracking-tighter">¡SISTEMA DESBLOQUEADO!</h2>
+
+            <div class="p-6 border-l-4 border-red-500 bg-red-900/20 text-left mb-8 rounded-r-xl w-full">
                 <p class="text-white italic leading-relaxed text-sm">
-                    "Has desbloqueado mi amor para siempre. Eres la persona con la que quiero compartir todos mis días. <br><br>
-                    <strong>¡Ya puedes abrir tu recompensa!</strong>"
+                    "Has liberado a tu novio por lo que has desbloqueado su amor para siempre. Eres la persona con la
+                    que quiero compartir todos mis días. <br><br>
+                    <strong>¡Ya puedes reclamar tu recompensa!</strong>"
                 </p>
             </div>
-            
+
             <div class="mt-8 text-6xl animate-bounce">🎁</div>
-            <p class="mt-10 text-[10px] text-gray-500 uppercase tracking-[0.3em] font-bold">Protocolo Finalizado // San Valentín 2026</p>
+
+            <p class="mt-10 text-[10px] text-gray-500 uppercase tracking-[0.3em] font-bold">Protocolo Finalizado // San
+                Valentín 2026</p>
         </div>
     </div>
 
@@ -112,13 +297,97 @@
 
         let currentQ = 0;
 
-        function startTest() {
-            document.getElementById('setup').classList.add('hidden');
-            document.getElementById('quiz').classList.remove('hidden');
-            showQuestion();
+        // Cinematic Script
+        const introLines = [
+            "INICIANDO SISTEMA...",
+            "ALERTA: BRECHA DE SEGURIDAD DETECTADA.",
+            "TU NOVIO HA SIDO LOCALIZADO...",
+            "ESTA ATRAPADO EN EL SECTOR 14 DE FEBRERO.",
+            "SÓLO TÚ PUEDES SALVARLO.",
+            "CADA ACIERTO DEBILITA LA JAULA.",
+            "NO COMETAS ERRORES.",
+            "EL TIEMPO SE ACABA..."
+        ];
+
+        function typeWriter(text, i, fn) {
+            if (i < text.length) {
+                document.getElementById("cinematic-text").innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
+                setTimeout(() => typeWriter(text, i + 1, fn), 50);
+            } else if (fn) {
+                setTimeout(fn, 1500);
+            }
+        }
+
+        let lineIdx = 0;
+        function playIntro() {
+            if (lineIdx < introLines.length) {
+                typeWriter(introLines[lineIdx], 0, () => {
+                    lineIdx++;
+                    playIntro();
+                });
+                if (lineIdx === 2) document.getElementById('skip-btn').style.opacity = '1';
+            } else {
+                skipCinematic();
+            }
+        }
+
+        function skipCinematic() {
+            document.getElementById('cinematic').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('cinematic').classList.add('hidden');
+                document.getElementById('game-container').classList.remove('hidden');
+                const cage = document.getElementById('cage');
+                cage.classList.remove('hidden');
+                document.getElementById('cage-placeholder-setup').appendChild(cage);
+                createHearts();
+            }, 1000);
+        }
+
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerText = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 10 + 's';
+                heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+                container.appendChild(heart);
+            }
+        }
+
+        window.onload = () => { playIntro(); };
+
+        function updateCage(restore = false) {
+            const bars = document.querySelectorAll('.bar');
+            if (restore) {
+                bars.forEach(bar => bar.classList.remove('removed'));
+                return;
+            }
+            // Quitar barrotes cada 3 preguntas (barrota 0 en Q3, 1 en Q6, 2 en Q9... espera la lógica de 9 es troll)
+            if (currentQ === 2) bars[0].classList.add('removed');
+            if (currentQ === 5) bars[1].classList.add('removed');
+            if (currentQ === 7) bars[2].classList.add('removed');
+            if (currentQ === 9) { // Final
+                bars.forEach(bar => bar.classList.add('removed'));
+            }
+        }
+
+        function startChallenge() {
+            const cage = document.getElementById('cage');
+            // Mover al body para que el fixed funcione relativo a la pantalla al ir a la esquina
+            document.body.appendChild(cage);
+            cage.classList.replace('cage-center', 'cage-corner');
+
+            setTimeout(() => {
+                document.getElementById('setup').classList.add('hidden');
+                document.getElementById('quiz').classList.remove('hidden');
+                showQuestion();
+            }, 800);
         }
 
         function showQuestion() {
+
             const q = questions[currentQ];
             document.getElementById('progress').innerText = `Pregunta ${currentQ + 1} de ${questions.length}`;
             document.getElementById('bar').style.width = `${((currentQ + 1) / questions.length) * 100}%`;
@@ -135,20 +404,21 @@
         }
 
         function checkAnswer(i) {
-            if(i === questions[currentQ].correct) {
-                if(currentQ === 2) { // Después de P3
+            if (i === questions[currentQ].correct) {
+                updateCage();
+                if (currentQ === 2) {
                     showSarcasticModal();
-                } else if(currentQ === 4) { // P5
+                } else if (currentQ === 4) {
                     document.getElementById('challenge-modal').classList.remove('hidden');
-                } else if(currentQ === 5) { // P6
+                } else if (currentQ === 5) {
                     showSorryModal();
-                } else if(currentQ === 8) { // P9
+                } else if (currentQ === 8) {
                     showTrollModal();
                 } else {
                     nextStep();
                 }
             } else {
-                alert("ACCESO DENEGADO: Inténtalo de nuevo.");
+                alert("ERROR DE RESPUESTA: Los barrotes se refuerzan.");
             }
         }
 
@@ -167,11 +437,13 @@
         function showTrollModal() {
             const modal = document.getElementById('troll-modal');
             modal.classList.remove('hidden');
+            // Restablecer barrotes visualmente para el susto
+            updateCage(true);
             setTimeout(() => {
                 document.getElementById('troll-icon').innerText = "😝";
                 document.getElementById('troll-title').innerText = "¡ERA BROMAAAA!";
                 document.getElementById('troll-title').classList.replace('text-red-500', 'text-green-400');
-                document.getElementById('troll-text').innerHTML = "Venga, que ya llegas al final... <br>Te dejo hacer la última.";
+                document.getElementById('troll-text').innerHTML = "No me voy a quedar en la jaula... <br>¡Responde la última y sácame de aquí!";
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     nextStep();
@@ -181,7 +453,7 @@
 
         function nextStep() {
             currentQ++;
-            if(currentQ < questions.length) { showQuestion(); }
+            if (currentQ < questions.length) { showQuestion(); }
             else { showResult(); }
         }
 
@@ -191,15 +463,30 @@
         }
 
         function giveUp() {
-            alert("¡No te rindas ahora! 😜");
-            location.reload();
+            alert("¿Y me vas a dejar aquí encerrado...? 🥺");
         }
 
         function showResult() {
+            const cage = document.getElementById('cage');
+            // Devolver al contenedor del resultado para que no se solape
+            document.getElementById('cage-placeholder-result').appendChild(cage);
+            cage.classList.replace('cage-corner', 'cage-center');
+
+            updateCage();
             document.getElementById('quiz').classList.add('hidden');
             document.getElementById('result').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.querySelector('.boyfriend-avatar').style.transform = "scale(1.2)";
+                // Ya no cambiamos a cohete, mantenemos 👨🏻‍💻
+            }, 1000);
+
             if (window.navigator.vibrate) window.navigator.vibrate([100, 30, 100, 30, 300]);
         }
+
+
     </script>
 </body>
+
 </html>
+
