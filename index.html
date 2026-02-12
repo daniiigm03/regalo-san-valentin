@@ -9,11 +9,24 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
 
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: radial-gradient(circle, #2a0a0a 0%, #050505 100%);
             color: #fce4e4;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         .glass {
@@ -115,7 +128,11 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            transform: translate(0, 0);
+            left: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+            width: 80px;
+            height: 80px;
         }
 
         .boyfriend-avatar {
@@ -375,9 +392,12 @@
 
         function startChallenge() {
             const cage = document.getElementById('cage');
-            // Mover al body para que el fixed funcione relativo a la pantalla al ir a la esquina
-            document.body.appendChild(cage);
+
+            // Simular transición visual
             cage.classList.replace('cage-center', 'cage-corner');
+
+            // No mover de padre en el DOM si no es estrictamente necesario 
+            // para evitar glitches en navegadores móviles
 
             setTimeout(() => {
                 document.getElementById('setup').classList.add('hidden');
@@ -468,8 +488,6 @@
 
         function showResult() {
             const cage = document.getElementById('cage');
-            // Devolver al contenedor del resultado para que no se solape
-            document.getElementById('cage-placeholder-result').appendChild(cage);
             cage.classList.replace('cage-corner', 'cage-center');
 
             updateCage();
@@ -489,4 +507,3 @@
 </body>
 
 </html>
-
