@@ -133,18 +133,20 @@
         }
 
         .cage-corner {
-            position: absolute;
-            top: -50px;
-            right: 0;
+            position: relative;
+            float: right;
+            margin-left: 15px;
+            margin-bottom: 10px;
             width: 80px;
             height: 80px;
-            transform: scale(0.9);
+            z-index: 50;
+            top: auto !important;
+            right: auto !important;
+            transform: none !important;
         }
 
         @media (max-width: 640px) {
             .cage-corner {
-                top: -40px;
-                right: 10px;
                 width: 70px;
                 height: 70px;
             }
@@ -264,18 +266,16 @@
     </div>
 
     <div id="game-container"
-        class="w-full max-w-md glass p-6 md:p-10 rounded-3xl shadow-2xl hidden flex flex-col items-center relative">
-        <!-- El contenedor de la jaula ahora está dentro del game-container relative -->
-        <div id="cage-wrapper" class="w-full relative flex justify-center">
-            <div id="cage" class="cage-container cage-center hidden">
-                <div class="boyfriend-avatar">👨🏻‍💻</div>
-                <div class="cage-bars">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
+        class="w-full max-w-md glass p-6 md:p-10 rounded-3xl shadow-2xl hidden flex flex-col items-center relative overflow-hidden">
+        <!-- Jaula única que se moverá entre secciones -->
+        <div id="cage" class="cage-container cage-center hidden">
+            <div class="boyfriend-avatar">👨🏻‍💻</div>
+            <div class="cage-bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
             </div>
         </div>
 
@@ -288,12 +288,14 @@
         </div>
 
 
-        <div id="quiz" class="hidden w-full">
+        <div id="quiz" class="hidden w-full text-left">
+            <div id="cage-quiz-placeholder"></div> <!-- El JS moverá la jaula aquí -->
             <p id="question" class="mb-8 text-xl font-semibold leading-tight text-white"></p>
             <div id="options" class="space-y-4"></div>
         </div>
 
         <div id="result" class="hidden text-center animate-fade-in relative w-full flex flex-col items-center">
+            <div id="cage-result-placeholder" class="w-full flex justify-center"></div>
             <h2 class="text-2xl font-bold text-red-500 mb-4 uppercase tracking-tighter">¡SISTEMA DESBLOQUEADO!</h2>
 
             <div class="p-6 border-l-4 border-red-500 bg-red-900/20 text-left mb-8 rounded-r-xl w-full">
@@ -405,7 +407,8 @@
         function startChallenge() {
             const cage = document.getElementById('cage');
 
-            // Simular transición visual dentro del contenedor
+            // Movemos la jaula al contenedor del quiz para que use el float:right
+            document.getElementById('cage-quiz-placeholder').appendChild(cage);
             cage.classList.replace('cage-center', 'cage-corner');
 
             setTimeout(() => {
@@ -494,6 +497,8 @@
 
         function showResult() {
             const cage = document.getElementById('cage');
+            // Devolver al contenedor del resultado para que se centre de nuevo
+            document.getElementById('cage-result-placeholder').appendChild(cage);
             cage.classList.replace('cage-corner', 'cage-center');
 
             updateCage();
